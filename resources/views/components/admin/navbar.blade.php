@@ -5,7 +5,7 @@
             <div class="aspect-square h-full">
                 <img src="{{ asset('assets/images/logo.png') }}" alt="">
             </div>
-            <p class="font-bold text-2xl duration-300 pb-1" :class="open ? 'opacity-0 lg:opacity-100' : 'opacity-0'">izlink
+            <p class="font-bold text-2xl duration-300 pb-1" :class="open ? 'opacity-0 lg:opacity-100' : 'opacity-0'">akoncara
             </p>
         </div>
         <div class="pl-4 space-y-4">
@@ -19,12 +19,6 @@
                 </div>
                 <p class=" line-clamp-1 duration-300" :class="open ? 'opacity-0 lg:opacity-100' : 'opacity-0'">Dashboard
                 </p>
-            </x-admin.navbutton>
-            <x-admin.navbutton route="guardian.index" :active="['guardian.index', 'guardian.create', 'guardian.show']">
-                <div class="min-w-5 h-5 mx-0.5">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 1H5a4 4 0 0 0-4 4v14a4 4 0 0 0 4 4h14a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4ZM9 4a1 1 0 1 1-1 1 1 1 0 0 1 1-1ZM5 4a1 1 0 1 1-1 1 1 1 0 0 1 1-1Zm14 5H5a1 1 0 0 1 0-2h14a1 1 0 0 1 0 2Zm0-3a1 1 0 1 1 1-1 1 1 0 0 1-1 1Z" fill="currentcolor" class="fill-232323"></path></svg>
-                </div>
-                <p class=" line-clamp-1 duration-300" :class="open ? 'opacity-0 lg:opacity-100' : 'opacity-0'">Guardian Web</p>
             </x-admin.navbutton>
             <x-admin.navbutton route="user.index" :active="['user.index', 'user.create', 'user.show']">
                 <div class="min-w-5 h-5 mx-0.5">
