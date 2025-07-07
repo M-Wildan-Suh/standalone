@@ -46,7 +46,8 @@ class ArticleShowController extends Controller
         $tag = ArticleTag::all();
         $category = ArticleCategory::all();
         $template = Template::all();
-        $phonenumber = PhoneNumber::where('type', '!=', 'main')->get();
+        $first = PhoneNumber::orderBy('id')->first();
+        $phonenumber = PhoneNumber::where('id', '!=', $first->id)->get();
         return view('admin.article.create-unique', compact('template', 'tag', 'phonenumber', 'category'));
     }
 
@@ -285,8 +286,9 @@ class ArticleShowController extends Controller
                 $newgalleryshow->save();
             }
     
-            return redirect()->route('article.index')->with('success', 'Artikel berhasil disimpan.');
         });
+
+        return redirect()->route('article.index')->with('success', 'Artikel berhasil disimpan.');
     }
 
     /**
@@ -299,7 +301,8 @@ class ArticleShowController extends Controller
         $categoryid = $articleShow->articles->articlecategory->pluck('id')->toArray();
         $category = ArticleCategory::whereNotIn('id', $categoryid)->get();
         $template = Template::all();
-        $phonenumber = PhoneNumber::where('type', '!=', 'main')->where('id', '!=', $articleShow->phone_number_id)->get();
+        $first = PhoneNumber::orderBy('id')->first();
+        $phonenumber = PhoneNumber::where('id', '!=', $first->id)->where('id', '!=', $articleShow->phone_number_id)->get();
         return view('admin.article.edit-unique', compact('articleShow', 'tag', 'template', 'phonenumber', 'category'));
     }
 
