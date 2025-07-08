@@ -44,6 +44,11 @@
         </div>
         <style>
 
+            .article p, h1, h2, h3, h4, h5, h6 {
+                color: inherit !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
             .article a {
                 font-weight: 700;
                 color: {{$template->desc_second_color ?? '#1d588d'}};
