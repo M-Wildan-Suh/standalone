@@ -44,7 +44,7 @@
         </div>
         <style>
 
-            .article p, h1, h2, h3, h4, h5, h6 {
+            .article strong, p, h1, h2, h3, h4, h5, h6 {
                 color: inherit !important;
                 margin: 0 !important;
                 padding: 0 !important;
