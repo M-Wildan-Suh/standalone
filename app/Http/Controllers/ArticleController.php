@@ -622,10 +622,12 @@ class ArticleController extends Controller
         $article->article = $request->article;
 
         if ($request->hasFile('profile')) {
-            $path = public_path('storage/images/article/profile/' . $article->profile);
-
-            if (file_exists($path)) {
-                unlink($path);
+            if ($article->profile) {
+                $path = public_path('storage/images/article/profile/' . $article->profile);
+    
+                if (file_exists($path)) {
+                    unlink($path);
+                }
             }
 
             $imageFile = $request->file('profile');

@@ -409,10 +409,12 @@ class ArticleShowController extends Controller
         }
 
         if ($request->hasFile('profile')) {
-            $path = public_path('storage/images/article/profile/' . $newarticle->profile);
-
-            if (file_exists($path)) {
-                unlink($path);
+            if ($newarticle->profile) {
+                $path = public_path('storage/images/article/profile/' . $article->profile);
+    
+                if (file_exists($path)) {
+                    unlink($path);
+                }
             }
 
             $imageFile = $request->file('profile');
