@@ -30,7 +30,7 @@
                         <div class=" md:sticky top-24 space-y-4 sm:space-y-6">
                             <div class=" w-full flex items-center gap-2 sm:gap-4 h-7 sm:h-10">
                                 <div class=" w-1 h-7 bg-byolink-2 rounded-full"></div>
-                                <p class=" text-xl font-bold text-center">Artikel Populer</p>
+                                <p class=" text-xl font-bold text-center">Bisnis Populer</p>
                             </div>
                             <div class=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4 sm:gap-6">
                                 @foreach ($trend as $item)
