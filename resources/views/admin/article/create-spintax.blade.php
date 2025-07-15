@@ -5,6 +5,16 @@
     <x-admin.component.summernoteinput title="Artikel" :value="old('article')" name="article" />
     
     <x-slot:additional>
+        <div class=" w-full">
+            <div class=" w-full flex flex-col max-w-full gap-2 text-sm sm:text-base font-medium">
+                <label>Profile</label>
+                <div class="w-full h-52 sm:h-60 flex items-center justify-center">
+                    <div class=" aspect-square max-h-full max-w-full rounded-md overflow-hidden shadow-md shadow-black/20 ">
+                        <x-admin.component.imageinput title="Nama/Tipe" placeholder="Masukkan nama/tipe web..." :value="''" name="profile" />
+                    </div>
+                </div>
+            </div>
+        </div>
         <div x-data="imageBanner" class="flex flex-col gap-2">
             <label class=" text-sm sm:text-base font-medium" for="image_banner">Banner (Max 6)</label>
             <input type="file" class="hidden" id="image_banner" name="image_banner[]" multiple @input="previewImages" accept="image/*">
@@ -97,6 +107,77 @@
             }
         </script>
         <x-admin.component.linkinput title="Video (Link Youtube/Tiktok)" placeholder="Masukkan link..." :value="old('link')" name="link" link="Url" />
+        <div class="flex flex-col gap-2 text-sm sm:text-base font-medium">
+            <p>Social Media</p>
+            <div x-data="socialLinkForm()" class="space-y-4">
+                <table class="text-sm sm:text-base font-normal border-separate rounded-md overflow-hidden border border-byolink-1 divide-y divide-byolink-1 min-h-10 bg-neutral-100 w-full">
+                    <tr class="divide-x divide-byolink-1">
+                        <td>
+                            <select x-model="newItem.type" class="w-full text-sm sm:text-base font-normal border-none focus:ring-0 rounded-md bg-transparent">
+                                <option value="" selected disabled>Pilih Tipe Sosmed</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">Tiktok</option>
+                                <option value="youtube">Youtube</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input x-model="newItem.url" type="text" placeholder="Input Link..." class="text-neutral-600 bg-transparent border-none ring-0 w-full text-sm sm:text-base focus:ring-0">
+                        </td>
+                        <td>
+                            <button @click="addItem" type="button" class="text-sm sm:text-base w-full px-2 py-2 rounded-md border bg-byolink-1 text-white font-semibold hover:bg-byolink-3 duration-300">
+                                Tambah
+                            </button>
+                        </td>
+                    </tr>
+            
+                    <template x-for="(item, index) in items" :key="index">
+                        <tr class="border-t border-byolink-1 divide-x divide-byolink-1">
+                            <td>
+                                <select disabled class="w-full text-sm sm:text-base font-normal border-none focus:ring-0 rounded-md bg-transparent">
+                                    <option x-text="item.type" selected></option>
+                                </select>
+                            </td>
+                            <td class="px-4">
+                                <p class="text-sm sm:text-base" x-text="item.url"></p>
+                            </td>
+                            <td>
+                                <button @click="removeItem(index)" type="button" class="text-sm sm:text-base w-full px-2 py-2 rounded-md border bg-byolink-1 text-white font-semibold hover:bg-byolink-3 duration-300">
+                                    Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            
+                <input type="hidden" name="social" :value="JSON.stringify(items)">
+            </div>
+            <script>
+                function socialLinkForm() {
+                    return {
+                        newItem: {
+                            type: '',
+                            url: ''
+                        },
+                        items: [],
+                        addItem() {
+                            if (this.newItem.type && this.newItem.url) {
+                                this.items.push({
+                                    type: this.newItem.type,
+                                    url: this.newItem.url
+                                });
+                
+                                // reset input
+                                this.newItem = { type: '', url: '' };
+                            }
+                        },
+                        removeItem(index) {
+                            this.items.splice(index, 1);
+                        }
+                    }
+                }
+                </script>
+        </div>
     </x-slot:additional>
     <x-slot:template>
         <div class=" space-y-2">

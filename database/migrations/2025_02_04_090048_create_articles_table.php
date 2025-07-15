@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('profile')->nullable();
             $table->text('judul');
             $table->longText('article');
             $table->string('article_type')->default('unique');

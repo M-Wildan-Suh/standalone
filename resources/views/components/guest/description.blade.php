@@ -1,6 +1,9 @@
 @props(['data' => null, 'template' => null])
-<div class=" w-full max-w-[600px] mx-auto">
-    <div style="background-color: {{$template->desc_main_color ?? 'white'}}; color: {{$template->desc_text_color}}" class=" w-full rounded-md shadow-md p-4 space-y-2 sm:space-y-4">
+<div class=" pt-10 w-full max-w-[600px] mx-auto">
+    <div style="background-color: {{$template->desc_main_color ?? 'white'}}; color: {{$template->desc_text_color}}" class=" relative w-full rounded-md shadow-md pt-10 p-4 space-y-2 sm:space-y-4">
+        <div class=" absolute flex items-center justify-center top-0 left-1/2 -translate-y-1/2 -translate-x-1/2 w-20 h-20 bg-white rounded-full overflow-hidden">
+            <img src="{{$data->articles->profile ? asset('storage/images/article/profile/'. $data->articles->profile) : asset('assets/images/placeholder.webp')}}" class=" w-full h-full object-cover" alt="">
+        </div>
         <div class=" w-full flex flex-wrap gap-2">
             @foreach ($data->articles->articlecategory as $item)
                 <a href="{{route('category', ['category' => $item->slug])}}">

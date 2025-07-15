@@ -10,6 +10,7 @@ use App\Models\ArticleShow;
 use App\Models\ArticleShowGallery;
 use App\Models\ArticleTag;
 use App\Models\PhoneNumber;
+use App\Models\SocialMedia;
 use App\Models\Template;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -102,6 +103,26 @@ class ArticleShowController extends Controller
             $newarticle->user_id = Auth::id();
             $newarticle->judul = $request->judul;
             $newarticle->article = $request->article;
+
+            // Profile
+            if ($request->hasFile('profile')) {
+                $imageFile = $request->file('profile');
+                $imageName = time();
+                $imagePath = public_path('storage/images/article/profile/');
+    
+                // Pastikan direktori ada, jika tidak maka buat
+                if (!File::exists($imagePath)) {
+                    File::makeDirectory($imagePath, 0755, true);
+                }
+    
+                $manager = new ImageManager(new Driver());
+                $image = $manager->read($imageFile->getPathname());
+    
+                $imageFullPath = $imagePath . $imageName . '.webp';
+                $image->save($imageFullPath);
+    
+                $newarticle->profile = $imageName . '.webp';
+            }
     
             if ($request->status === "schedule") {
                 $newarticle->schedule = true;
@@ -129,8 +150,23 @@ class ArticleShowController extends Controller
     
             $newarticle->template()->sync([$request->template_id]);
             
+            // Social Media
+            $social = json_decode($request->input('social'), true);
+
+            if ($social) {
+                foreach ($social as $item) {
+                    $newsocial = new SocialMedia;
+
+                    $newsocial->article_id = $newarticle->id;
+                    $newsocial->type = $item['type'];
+                    $newsocial->url = $item['url'];
+
+                    $newsocial->save();
+                }
+            }
+
             $newbanner = null;
-    
+
             // Banner
             if ($request->hasFile('image')) {
                 $newbanner = new ArticleBanner;
@@ -157,7 +193,6 @@ class ArticleShowController extends Controller
                 
                 $newbanner->save();
             }
-            
     
             // Tag
             if ($request->tag) {
@@ -373,6 +408,31 @@ class ArticleShowController extends Controller
             $newarticle->schedule = false;
         }
 
+        if ($request->hasFile('profile')) {
+            $path = public_path('storage/images/article/profile/' . $newarticle->profile);
+
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            $imageFile = $request->file('image');
+            $imageName = time();
+            $imagePath = public_path('storage/images/article/profile/');
+
+            // Pastikan direktori ada, jika tidak maka buat
+            if (!File::exists($imagePath)) {
+                File::makeDirectory($imagePath, 0755, true);
+            }
+
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($imageFile->getPathname());
+
+            $imageFullPath = $imagePath . $imageName . '.webp';
+            $image->save($imageFullPath);
+
+            $newarticle->profile = $imageName . '.webp';
+        }
+
         // Cek apakah link adalah YouTube
         if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $request->link, $matches)) {
             $videoId = $matches[1];
@@ -392,6 +452,24 @@ class ArticleShowController extends Controller
         $newarticle->save();
 
         $newarticle->template()->sync([$request->template_id]);
+
+        $social = json_decode($request->input('social'), true);
+
+        if ($social) {
+            // Hapus semua sosial media lama dari artikel ini
+            SocialMedia::where('article_id', $newarticle->id)->delete();
+
+            // Simpan ulang sosial media baru
+            foreach ($social as $item) {
+                $newsocial = new SocialMedia();
+
+                $newsocial->article_id = $newarticle->id;
+                $newsocial->type = $item['type'];
+                $newsocial->url = $item['url'];
+
+                $newsocial->save();
+            }
+        }
         
         $banner = null;
 

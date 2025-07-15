@@ -9,6 +9,7 @@ use App\Models\ArticleGallery;
 use App\Models\ArticleShow;
 use App\Models\ArticleShowGallery;
 use App\Models\ArticleTag;
+use App\Models\SocialMedia;
 use App\Models\SourceCode;
 use App\Models\Template;
 use Illuminate\Support\Str;
@@ -372,6 +373,26 @@ class ArticleController extends Controller
         $newarticle->article = $request->article;
         $newarticle->article_type = 'spintax';
 
+        // Profile
+        if ($request->hasFile('profile')) {
+            $imageFile = $request->file('profile');
+            $imageName = time();
+            $imagePath = public_path('storage/images/article/profile/');
+
+            // Pastikan direktori ada, jika tidak maka buat
+            if (!File::exists($imagePath)) {
+                File::makeDirectory($imagePath, 0755, true);
+            }
+
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($imageFile->getPathname());
+
+            $imageFullPath = $imagePath . $imageName . '.webp';
+            $image->save($imageFullPath);
+
+            $newarticle->profile = $imageName . '.webp';
+        }
+
         // Cek apakah link adalah YouTube
         if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $request->link, $matches)) {
             $videoId = $matches[1];
@@ -395,6 +416,21 @@ class ArticleController extends Controller
         $newbanner = new ArticleBanner;
 
         $newbanner->article_id = $newarticle->id;
+
+        // Social Media
+        $social = json_decode($request->input('social'), true);
+
+        if ($social) {
+            foreach ($social as $item) {
+                $newsocial = new SocialMedia();
+
+                $newsocial->article_id = $newarticle->id;
+                $newsocial->type = $item['type'];
+                $newsocial->url = $item['url'];
+
+                $newsocial->save();
+            }
+        }
 
         // Banner
         if ($request->has('image_banner') && !empty($request->image_banner)) {
@@ -585,6 +621,30 @@ class ArticleController extends Controller
         $article->judul = $request->judul;
         $article->article = $request->article;
 
+        if ($request->hasFile('profile')) {
+            $path = public_path('storage/images/article/profile/' . $article->profile);
+
+            if (file_exists($path)) {
+                unlink($path);
+            }
+
+            $imageFile = $request->file('image');
+            $imageName = time();
+            $imagePath = public_path('storage/images/article/profile/');
+
+            // Pastikan direktori ada, jika tidak maka buat
+            if (!File::exists($imagePath)) {
+                File::makeDirectory($imagePath, 0755, true);
+            }
+
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($imageFile->getPathname());
+
+            $imageFullPath = $imagePath . $imageName . '.webp';
+            $image->save($imageFullPath);
+
+            $article->profile = $imageName . '.webp';
+        }
 
         if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $request->link, $matches)) {
             $videoId = $matches[1];
@@ -604,6 +664,24 @@ class ArticleController extends Controller
         $article->save();
 
         $article->template()->sync($request->template_id);
+
+        $social = json_decode($request->input('social'), true);
+
+        if ($social) {
+            // Hapus semua sosial media lama dari artikel ini
+            SocialMedia::where('article_id', $article->id)->delete();
+
+            // Simpan ulang sosial media baru
+            foreach ($social as $item) {
+                $newsocial = new SocialMedia();
+
+                $newsocial->article_id = $article->id;
+                $newsocial->type = $item['type'];
+                $newsocial->url = $item['url'];
+
+                $newsocial->save();
+            }
+        }
 
         if ($request->tag) {
             // Ubah tag menjadi huruf besar di awal
@@ -671,6 +749,13 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
+        if ($article->profile) {
+            $path = public_path('storage/images/article/profile/' . $article->profile);
+        
+            if (file_exists($path)) {
+                unlink($path);
+            }
+        }
         if ($article->articlebanner) {
             foreach ($article->articlebanner as $item) {
                 $path = public_path('storage/images/article/banner/' . $item->image);

@@ -2,14 +2,49 @@
     <div class=" w-full max-w-[600px] mx-auto">
         <div class=" w-full py-2 grid {{ ($data->telephone && $data->whatsapp) ? 'grid-cols-2' : 'grid-cols-1' }} gap-2 sm:gap-4 text-sm sm:text-base">
             @if ($data->telephone)
-                <a href="tel:{{$data->no_tlp}}" target="__blank">
-                    <button style="background-color: {{$template->contact_main_color}}" class=" w-full flex items-center justify-center gap-0.5 sm:gap-1.5 py-2 text-white rounded-full hover:scale-95 duration-300">
+                <div x-data="{ sosmed : false }" class=" relative w-full">
+                    <button @click="sosmed = !sosmed" style="background-color: {{$template->contact_main_color}}" 
+                        class=" relative z-10 w-full flex items-center justify-center gap-0.5 sm:gap-1.5 py-2 text-white rounded-full duration-300">
                         <div class=" w-4 sm:w-5 aspect-square">
-                            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h256v256H0z"></path><path d="M92.5 124.8a83.6 83.6 0 0 0 39 38.9 8 8 0 0 0 7.9-.6l25-16.7a7.9 7.9 0 0 1 7.6-.7l46.8 20.1a7.9 7.9 0 0 1 4.8 8.3A48 48 0 0 1 176 216 136 136 0 0 1 40 80a48 48 0 0 1 41.9-47.6 7.9 7.9 0 0 1 8.3 4.8l20.1 46.9a8 8 0 0 1-.6 7.5L93 117a8 8 0 0 0-.5 7.8Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" class="stroke-000000"></path></svg>
+                            <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"><rect fill="none" height="256" width="256"/><circle cx="64" cy="128" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="176" cy="200" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="176" cy="56" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" x1="149.1" x2="90.9" y1="73.3" y2="110.7"/><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" x1="90.9" x2="149.1" y1="145.3" y2="182.7"/></svg>
                         </div>
-                        <p>Telephone</p>
+                        <p>Social Media</p>
                     </button>
-                </a>
+                    <div x-show="sosmed" style="border-color: {{$template->desc_second_color}}; background-color: {{$template->desc_main_color}}; color: {{$template->desc_text_color}}" 
+                        class=" absolute pb-8 w-full h-36 bottom-1/2 left-0 text-sm sm:text-base rounded-t-md shadow-md shadow-black/20">
+                        <div class="p-4 h-full overflow-auto space-y-2">
+                            @foreach ($data->articles->social as $item)
+                                @php
+                                    $url = $item->url;
+                                    $fullUrl = Str::startsWith($url, ['http://', 'https://']) ? $url : 'https://' . $url;
+                                @endphp
+                                
+                                <a href="{{ $fullUrl }}" class="flex" target="_blank">
+                                    <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ strtolower($item->type) }}">
+                                        {{ $item->type }}
+                                    </button>
+                                </a>
+                            @endforeach
+                        </div>
+                        <style>
+                            .social-facebook {
+                                background: linear-gradient(to right, #1168db, #4e8efc);
+                            }
+
+                            .social-instagram {
+                                background: linear-gradient(to right, #feda75, #d62976, #962fbf);
+                            }
+
+                            .social-tiktok {
+                                background: linear-gradient(to right, #000000, #494747);
+                            }
+
+                            .social-youtube {
+                                background: linear-gradient(to right, #FF0000, #cc0000);
+                            }
+                        </style>
+                    </div>
+                </div>
             @endif
             @if ($data->whatsapp)
                 <a href="https://wa.me/{{$data->no_tlp}}?text={{ urlencode('Halo saya dapat info dari '.url()->current()) }}" target="__blank">
