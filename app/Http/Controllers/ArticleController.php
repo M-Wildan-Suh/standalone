@@ -628,7 +628,7 @@ class ArticleController extends Controller
                 unlink($path);
             }
 
-            $imageFile = $request->file('image');
+            $imageFile = $request->file('profile');
             $imageName = time();
             $imagePath = public_path('storage/images/article/profile/');
 
