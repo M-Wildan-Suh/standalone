@@ -13,32 +13,48 @@
                     <div x-show="sosmed" style="border-color: {{$template->desc_second_color}}; background-color: {{$template->desc_main_color}}; color: {{$template->desc_text_color}}" 
                         class=" absolute pb-8 w-full h-36 bottom-1/2 left-0 text-sm sm:text-base rounded-t-md shadow-md shadow-black/20">
                         <div class="p-4 h-full overflow-auto space-y-2">
-                            @foreach ($data->articles->social as $item)
-                                @php
-                                    $url = $item->url;
-                                    $fullUrl = Str::startsWith($url, ['http://', 'https://']) ? $url : 'https://' . $url;
-                                @endphp
-                                
-                                <a href="{{ $fullUrl }}" class="flex" target="_blank">
-                                    <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ strtolower($item->type) }}">
-                                        {{ $item->type }}
-                                    </button>
-                                </a>
-                            @endforeach
+                            @php
+                                $socialTypes = ['facebook', 'instagram', 'tiktok', 'youtube'];
+                                $hasSocial = isset($data->articles->social) && count($data->articles->social) > 0;
+                            @endphp
+                        
+                            @if ($hasSocial)
+                                @foreach ($data->articles->social as $item)
+                                    @php
+                                        $url = $item->url;
+                                        $fullUrl = Str::startsWith($url, ['http://', 'https://']) ? $url : 'https://' . $url;
+                                    @endphp
+                        
+                                    <a href="{{ $fullUrl }}" class="flex" target="_blank">
+                                        <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ strtolower($item->type) }}">
+                                            {{ $item->type }}
+                                        </button>
+                                    </a>
+                                @endforeach
+                            @else
+                                @foreach ($socialTypes as $type)
+                                    <a href="#" class="flex">
+                                        <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ $type }}">
+                                            {{ $type }}
+                                        </button>
+                                    </a>
+                                @endforeach
+                            @endif
                         </div>
+                        
                         <style>
                             .social-facebook {
                                 background: linear-gradient(to right, #1168db, #4e8efc);
                             }
-
+                        
                             .social-instagram {
                                 background: linear-gradient(to right, #feda75, #d62976, #962fbf);
                             }
-
+                        
                             .social-tiktok {
                                 background: linear-gradient(to right, #000000, #494747);
                             }
-
+                        
                             .social-youtube {
                                 background: linear-gradient(to right, #FF0000, #cc0000);
                             }
