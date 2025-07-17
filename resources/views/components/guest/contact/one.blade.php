@@ -10,9 +10,16 @@
                         </div>
                         <p>Social Media</p>
                     </button>
-                    <div x-show="sosmed" style="border-color: {{$template->desc_second_color}}; background-color: {{$template->desc_main_color}}; color: {{$template->desc_text_color}}" 
-                        class=" absolute pb-8 w-full h-36 bottom-1/2 left-0 text-sm sm:text-base rounded-t-md shadow-md shadow-black/20">
-                        <div class="p-4 h-full overflow-auto space-y-2">
+                    <div x-show="sosmed"
+                        x-transition:enter="transition-all duration-700"
+                        x-transition:enter-start="max-h-0"
+                        x-transition:enter-end="max-h-96"
+                        x-transition:leave="transition-all duration-300"
+                        x-transition:leave-start="max-h-96"
+                        x-transition:leave-end="max-h-0"
+                        style="border-color: {{$template->desc_second_color}}; color: {{$template->desc_text_color}}" 
+                        class=" absolute overflow-hidden pb-4 w-full bg-transparent backdrop-blur-sm bottom-1/2 left-0 text-sm sm:text-base rounded-t-md">
+                        <div class="pb-3 space-y-2">
                             @php
                                 $socialTypes = ['facebook', 'instagram', 'tiktok', 'youtube'];
                                 $hasSocial = isset($data->articles->social) && count($data->articles->social) > 0;
