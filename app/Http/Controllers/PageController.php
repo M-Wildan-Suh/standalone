@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\ArticleShow;
 use App\Models\ArticleTag;
 use App\Models\PhoneNumber;
+use App\Models\SocialMedia;
 use App\Models\Template;
 use App\Models\User;
+use App\Models\Youtube;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -126,10 +129,53 @@ class PageController extends Controller
 
         $data->date = Carbon::parse($data->created_at)->locale('id')->translatedFormat('d F Y');
         // dd($data->articles);
+
+        $socialTypes = ['facebook', 'instagram', 'tiktok', 'youtube'];
+
+        $existing = collect($data->articles->social ?? []);
+
+        // Buat ulang data sosial media agar lengkap, default "off", ganti "on" jika ada input
+        $socialMedia = collect($socialTypes)->map(function ($type) use ($existing) {
+            $item = $existing->firstWhere('type', $type);
+        
+            if ($item) {
+                $item->status = 'on';
+                return $item;
+            }
+        
+            return new SocialMedia([
+                'type' => $type,
+                'url' => null,
+                'status' => 'off',
+            ]);
+        });
+
+        // Assign kembali jika perlu
+        $data->articles->social = $socialMedia;
         
         $category = ArticleCategory::all();
 
         return view('guest.business', compact('data', 'template', 'category'));
+    }
+
+    public function youtube() {
+        $category = ArticleCategory::all();
+
+        $youtube = Youtube::all();
+        $youtube->transform(function ($data) {
+            preg_match('/(?:youtube\.com\/.*[?&]v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $data->youtube, $match);
+            $data->youtube = isset($match[1]) ? "https://www.youtube.com/embed/{$match[1]}" : $data->youtube;
+            return $data;
+        });
+
+        $data = Article::whereNotNull('youtube')->get();
+
+        $merged = $youtube->merge($data);
+
+        $youtube = $merged->sortByDesc('created_at')->values();
+        // dd($sorted);
+
+        return view('guest.youtube', compact('category', 'youtube'));
     }
 
     public function notFound() {

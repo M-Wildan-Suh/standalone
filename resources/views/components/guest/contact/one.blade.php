@@ -18,35 +18,36 @@
                         x-transition:leave-start="max-h-96"
                         x-transition:leave-end="max-h-0"
                         style="border-color: {{$template->desc_second_color}}; color: {{$template->desc_text_color}}" 
-                        class=" absolute overflow-hidden pb-4 w-full bg-transparent backdrop-blur-sm bottom-1/2 left-0 text-sm sm:text-base rounded-t-md">
+                        class=" absolute pb-4 w-full bg-transparent backdrop-blur-sm bottom-1/2 left-0 text-sm sm:text-base rounded-t-md">
                         <div class="pb-3 space-y-2">
-                            @php
-                                $socialTypes = ['facebook', 'instagram', 'tiktok', 'youtube'];
-                                $hasSocial = isset($data->articles->social) && count($data->articles->social) > 0;
-                            @endphp
-                        
-                            @if ($hasSocial)
-                                @foreach ($data->articles->social as $item)
-                                    @php
-                                        $url = $item->url;
-                                        $fullUrl = Str::startsWith($url, ['http://', 'https://']) ? $url : 'https://' . $url;
-                                    @endphp
-                        
-                                    <a href="{{ $fullUrl }}" class="flex" target="_blank">
-                                        <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ strtolower($item->type) }}">
-                                            {{ $item->type }}
-                                        </button>
-                                    </a>
-                                @endforeach
-                            @else
-                                @foreach ($socialTypes as $type)
-                                    <a href="#" class="flex">
-                                        <button class="w-full font-semibold text-white duration-300 hover:scale-95 py-1.5 rounded-full capitalize social-{{ $type }}">
-                                            {{ $type }}
-                                        </button>
-                                    </a>
-                                @endforeach
-                            @endif
+                            @foreach ($data->articles->social as $item)
+                                @php
+                                    $url = $item->url;
+                                    $fullUrl = Str::startsWith($url, ['http://', 'https://']) ? $url : 'https://' . $url;
+                                @endphp
+                    
+                                <a href="{{ $fullUrl }}" class="flex" target="_blank">
+                                    <button {{$item->status === "off" ? "disabled" : ''}} class=" {{$item->status === "off" ? " cursor-not-allowed" : "hover:scale-95"}} group relative w-full flex items-center justify-center gap-2 font-semibold text-white duration-300 py-1.5 rounded-full capitalize social-{{ strtolower($item->type) }}">
+                                        <div class=" w-4 h-4">
+                                            @if ($item->type === 'facebook')
+                                                <svg height="100%" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" version="1.1" viewBox="0 0 512 512" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="currentColor" d="M512,257.555c0,-141.385 -114.615,-256 -256,-256c-141.385,0 -256,114.615 -256,256c0,127.777 93.616,233.685 216,252.89l0,-178.89l-65,0l0,-74l65,0l0,-56.4c0,-64.16 38.219,-99.6 96.695,-99.6c28.009,0 57.305,5 57.305,5l0,63l-32.281,0c-31.801,0 -41.719,19.733 -41.719,39.978l0,48.022l71,0l-11.35,74l-59.65,0l0,178.89c122.385,-19.205 216,-125.113 216,-252.89Z" style="fill-rule:nonzero;"/></svg>
+                                            @elseif ($item->type === 'instagram')
+                                                <svg data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title/><path fill="currentColor" d="M314.757,147.525H197.243a49.717,49.717,0,0,0-49.718,49.718V314.757a49.718,49.718,0,0,0,49.718,49.718H314.757a49.718,49.718,0,0,0,49.717-49.718V197.243A49.717,49.717,0,0,0,314.757,147.525ZM256,324.391A68.391,68.391,0,1,1,324.391,256,68.391,68.391,0,0,1,256,324.391ZM327.242,201.58a16.271,16.271,0,1,1,16.27-16.271A16.271,16.271,0,0,1,327.242,201.58Z"/><path fill="currentColor" d="M256,211.545A44.455,44.455,0,1,0,300.455,256,44.455,44.455,0,0,0,256,211.545Z"/><path fill="currentColor" d="M256,0C114.615,0,0,114.615,0,256S114.615,512,256,512,512,397.385,512,256,397.385,0,256,0ZM389.333,312.5A76.836,76.836,0,0,1,312.5,389.333H199.5A76.837,76.837,0,0,1,122.666,312.5V199.5A76.836,76.836,0,0,1,199.5,122.667H312.5A76.836,76.836,0,0,1,389.333,199.5Z"/></svg>
+                                            @elseif ($item->type === 'youtube')
+                                                <svg height="100%" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;" version="1.1" viewBox="0 0 512 512" width="100%" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:serif="http://www.serif.com/" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="currentColor" d="M256,0c141.29,0 256,114.71 256,256c0,141.29 -114.71,256 -256,256c-141.29,0 -256,-114.71 -256,-256c0,-141.29 114.71,-256 256,-256Zm153.315,178.978c-3.68,-13.769 -14.522,-24.61 -28.29,-28.29c-24.958,-6.688 -125.025,-6.688 -125.025,-6.688c0,0 -100.067,0 -125.025,6.688c-13.765,3.68 -24.61,14.521 -28.29,28.29c-6.685,24.955 -6.685,77.024 -6.685,77.024c0,0 0,52.067 6.685,77.02c3.68,13.769 14.525,24.614 28.29,28.293c24.958,6.685 125.025,6.685 125.025,6.685c0,0 100.067,0 125.025,-6.685c13.768,-3.679 24.61,-14.524 28.29,-28.293c6.685,-24.953 6.685,-77.02 6.685,-77.02c0,0 0,-52.069 -6.685,-77.024Zm-185.316,125.025l0,-96.002l83.137,48.001l-83.137,48.001Z"/></svg>
+                                            @elseif ($item->type === 'tiktok')
+                                                <svg data-name="Layer 1" id="Layer_1" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title/><path fill="currentColor" d="M256,0C114.615,0,0,114.615,0,256S114.615,512,256,512,512,397.385,512,256,397.385,0,256,0ZM385.62,232.382c-27.184,0-53.634-8.822-74-23.75l-.162,101.5a92.457,92.457,0,1,1-80.178-91.721v49.845a43.657,43.657,0,1,0,31.288,41.876V109.333h51.275a71.773,71.773,0,0,0,71.774,71.773Z"/></svg>
+                                            @endif
+                                        </div>
+                                        <p>{{ $item->type }}</p>
+                                        @if ($item->status === "off")
+                                            <div class="absolute left-full bottom-full translate-y-1/2 -translate-x-1/2 bg-white text-sm px-2 py-1 text-black text-nowrap hidden group-hover:block z-10 rounded-md">
+                                                Link tidak tersedia
+                                            </div>
+                                        @endif
+                                    </button>
+                                </a>
+                            @endforeach
                         </div>
                         
                         <style>

@@ -14,6 +14,7 @@ use App\Http\Controllers\SitemapController;
 use App\Http\Controllers\SourceCodeController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\YoutubeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +59,8 @@ Route::middleware('daily_schedule')->group(function () {
         return app(PageController::class)->article($request, null, null, $tag);
     })->name('pagetag');
 
+    Route::get('/youtube', [PageController::class, 'youtube'])->name('youtube');
+
     Route::get('/page-not-found', [PageController::class, 'notFound'])->name('not.found');
 });
 
@@ -92,6 +95,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/admin/article-show', ArticleShowController::class);
     Route::resource('/admin/article-show-gallery', ArticleShowGalleryController::class);
+
+    Route::resource('/admin/youtube', YoutubeController::class);
 
     Route::resource('/admin/article-generated', ArticleGeneratedController::class);
 

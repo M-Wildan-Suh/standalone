@@ -14,6 +14,46 @@
                     class="w-full h-full object-cover" alt="">
             </div>
         </div>
+        <div 
+            x-data="typingText" 
+            x-init="observe($el)" 
+            class="w-full text-base sm:text-lg font-semibold overflow-hidden">
+            <span x-text="displayText"></span>
+        </div>
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('typingText', () => ({
+                    fullText: 'Selamat datang dan terima kasih telah mengunjungi kami. Kami siap membantu memenuhi kebutuhan Anda dengan pelayanan terbaik.',
+                    displayText: '',
+                    observer: null,
+                    index: 0,
+                    typingSpeed: 50, // kecepatan animasi
+
+                    observe(el) {
+                        this.observer = new IntersectionObserver((entries) => {
+                            if (entries[0].isIntersecting) {
+                                this.startTyping();
+                                this.observer.disconnect();
+                            }
+                        }, { threshold: 0.7 });
+
+                        this.observer.observe(el);
+                    },
+
+                    startTyping() {
+                        const type = () => {
+                            if (this.index < this.fullText.length) {
+                                this.displayText += this.fullText[this.index];
+                                this.index++;
+                                setTimeout(type, this.typingSpeed);
+                            }
+                        };
+                        type();
+                    },
+                }));
+            });
+        </script>
 
         <style>
             @keyframes spin-slow {
