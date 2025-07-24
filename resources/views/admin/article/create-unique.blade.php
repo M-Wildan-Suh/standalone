@@ -2,6 +2,7 @@
     <x-admin.component.textinput title="Judul" placeholder="Masukkan Judul" :value="old('judul')" name="judul" />
     <x-admin.component.categoryinput title="Kategori" :tag="$category" :value="old('category')" name="category[]" />
     <x-admin.component.taginput title="Tag" :tag="$tag" :value="old('tag')" name="tag[]" />
+    <x-admin.component.textareainput title="Sambutan (Opsional)" placeholder="Masukkan Sambutan" :value="old('greet')" name="greet" />
     <x-admin.component.summernoteinput title="Artikel" :value="old('article')" name="article" />
     <div class=" grid grid-cols-2 gap-4">
         <div class="flex flex-col gap-2 text-sm sm:text-base font-medium">

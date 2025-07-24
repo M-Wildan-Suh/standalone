@@ -102,6 +102,7 @@ class ArticleShowController extends Controller
     
             $newarticle->user_id = Auth::id();
             $newarticle->judul = $request->judul;
+            $newarticle->greet = $request->greet;
             $newarticle->article = $request->article;
 
             // Profile
@@ -400,6 +401,7 @@ class ArticleShowController extends Controller
         $newarticle = Article::find($articleShow->article_id);
 
         $newarticle->judul = $request->judul;
+        $newarticle->greet = $request->greet;
         $newarticle->article = $request->article;
 
         if ($request->status === "schedule") {
@@ -410,7 +412,7 @@ class ArticleShowController extends Controller
 
         if ($request->hasFile('profile')) {
             if ($newarticle->profile) {
-                $path = public_path('storage/images/article/profile/' . $article->profile);
+                $path = public_path('storage/images/article/profile/' . $newarticle->profile);
     
                 if (file_exists($path)) {
                     unlink($path);

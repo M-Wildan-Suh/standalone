@@ -370,6 +370,7 @@ class ArticleController extends Controller
 
         $newarticle->user_id = Auth::id();
         $newarticle->judul = $request->judul;
+        $newarticle->greet = $request->greet;
         $newarticle->article = $request->article;
         $newarticle->article_type = 'spintax';
 
@@ -619,6 +620,7 @@ class ArticleController extends Controller
         }
 
         $article->judul = $request->judul;
+        $article->greet = $request->greet;
         $article->article = $request->article;
 
         if ($request->hasFile('profile')) {

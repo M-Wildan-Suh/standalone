@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('profile')->nullable();
             $table->text('judul');
+            $table->text('greet')->nullable();
             $table->longText('article');
             $table->string('article_type')->default('unique');
             $table->string('video_type');

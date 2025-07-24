@@ -3,6 +3,7 @@
     <x-admin.component.textinput title="Judul" placeholder="Masukkan Judul" :value="old('judul', $article->judul)" name="judul" />
     <x-admin.component.categoryinput title="Kategori" :tag="$category" :value="old('category', $article->articlecategory)" name="category[]" />
     <x-admin.component.taginput title="Tag" :tag="$tag" :value="old('tag', $article->articletag)" name="tag[]" />
+    <x-admin.component.textareainput title="Sambutan (Opsional)" placeholder="Masukkan Sambutan" :value="old('greet', $article->greet)" name="greet" />
     <x-admin.component.summernoteinput title="Artikel" :value="old('article', $article->article)" name="article" />
 
     <x-slot:additional>
